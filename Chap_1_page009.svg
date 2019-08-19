@@ -1,0 +1,22 @@
+<svg width='1001px' height='1798px' xmlns='http://www.w3.org/2000/svg' xmlns:xlink='http://www.w3.org/1999/xlink'>
+<defs> <style type='text/css'><![CDATA[
+  path { stroke-linecap: round; stroke-linejoin: round; }
+]]></style> </defs>
+<g id='page_1' width='1001.000' height='1798.000' xruling='0.000' yruling='40.000' marginLeft='100.000' papercolor='#FFFFFF' rulecolor='#FF0000FF'>
+<rect id='pagebg' width='1001.000' height='1798.000' fill='#FFFFFF'/>
+<g class='ruleline'>
+<g class='rulepattern' shape-rendering='crispEdges'>
+<pattern id='pattern0' class='rule_y' x='0.000' y='0.000' width='1001.000' height='40.000' patternUnits='userSpaceOnUse'>
+<path vector-effect='non-scaling-stroke' fill='none' stroke='#0000FF' stroke-width='1.000' d='M0.000 40.000 l 65535.000 0.000'/>
+</pattern>
+<rect x='0.000' y='0.000' width='1001.000' height='1798.000' fill='url(#pattern0)'/>
+</g>
+<g class='rulepattern' shape-rendering='crispEdges'>
+<pattern id='pattern1' class='rule_x rule_margin' x='100.000' y='0.000' width='901.000' height='1798.000' patternUnits='userSpaceOnUse'>
+<path vector-effect='non-scaling-stroke' fill='none' stroke='#FF0000' stroke-width='1.000' d='M0.000 0.000 l 0.000 65535.000'/>
+</pattern>
+<rect x='100.000' y='0.000' width='901.000' height='1798.000' fill='url(#pattern1)'/>
+</g>
+</g>
+</g>
+</svg>
