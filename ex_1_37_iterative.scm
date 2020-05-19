@@ -1,4 +1,4 @@
-; The approach to take is to start from the last term and build on top of it
+;; The approach to take is to start from the last term and build on top of it
 
 #lang sicp
 
@@ -8,7 +8,7 @@
           (n-i (n i)))
       (cond ((= k i) (cont-frac-iter (/ n-i d-i)
                                      (- i 1)))
-            ((= i 1) result)
+            ((= i 0) result)
             (else (cont-frac-iter (/ n-i (+ d-i result))
                                   (- i 1))))))
   (cont-frac-iter 0 k)
