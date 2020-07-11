@@ -25,3 +25,20 @@
 (same-parity 1 2 3 4 5 6 7)
 
 (same-parity 2 3 4 5 6 7)
+
+
+;; After seeing exercise 21/22
+
+(define (same-par-recur x . d)
+  (if (null? d)
+      nil
+      (if (same-truthy (even? x) (even? (car d)))
+          (cons (car d) (same-par-recur (cons x (cdr d))))
+          (same-par-recur (cons x (cdr d))))))
+
+(same-par-recur 1 3 5 7)
+
+(same-par-recur 2 3 4 5 6 7)
+
+;; OH duh but this doesn't work because I can't spread the args I'm passing a
+;; single list.
