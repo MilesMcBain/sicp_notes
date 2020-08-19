@@ -28,3 +28,9 @@
 (reverse (list 1 4 9 16 29))
 
 
+;; recursive implementation
+(define (reverse l)
+  (if (null? l)
+      nil
+      (append (reverse (cdr l)) (list (car l)))))
+
