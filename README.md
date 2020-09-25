@@ -1,6 +1,6 @@
 # sicp_notes
 
-![](square_limit.png)
+<img src="square-limit.png" width="1000" />
 
 SICP notes and exercises
 
