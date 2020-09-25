@@ -1,4 +1,7 @@
 # sicp_notes
+
+![](square_limit.png)
+
 SICP notes and exercises
 
 # Resources
