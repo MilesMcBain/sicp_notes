@@ -29,14 +29,14 @@
         ((=number? a2 0) a1)
         ((and (number? a1) (number? a2))
          (+ a1 a2))
-        (else (list '+ a1 a2))))
+        (else (list a1 '+ a2))))
 
 (define (make-product m1 m2)
   (cond ((or (=number? m1 0) (=number? m2 0)) 0)
         ((=number? m1 1) m2)
         ((=number? m2 1) m1)
         ((and (number? m1) (number? m2)) (* m1 m2))
-        (else (list '* m1 m2))))
+        (else (list m1 '* m2))))
 
 (define (make-exponentiation base exponent)
   (cond ((=number? exponent 0) 1)
@@ -52,17 +52,55 @@
           (accumulate op initial (cdr sequence))))
   )
 
-(define (sum? x) (and (pair? x) (eq? (cadr x) '+)))
+(define (split-sym l sym)
+  (define (split-it lhs rhs sym)
+    (cond ((null? rhs) nil)
+          ((eq? (car rhs) sym) (list lhs (cdr rhs)))
+          (else (split-it(append lhs (list (car rhs))) (cdr rhs) sym))
+          ))
 
-(define (addend s) (car s))
+  ;; This function is needed because a single element list is containing a
+  ;; variable or number isn't a data type that is understood by the rest of the
+  ;; program. It unwraps length 1 lists to give the atomic element.
+  (define (simplify-splits l)
+    (map (lambda (split)
+           (if (and (not (null? split)) (null? (cdr split)))
+               (car split)
+               split))
+         l))
 
-(define (augend s) (accumulate make-sum 0 (cddr s)))
+  (simplify-splits (split-it '() l sym)))
 
-(define (product? x) (and (pair? x) (eq? (cadr x) '*)))
+(define (contains-sym? l sym)
+  (cond ((null? l) #f)
+        ((eq? (car l) sym) #t)
+        (else (contains-sym? (cdr l) sym))))
 
-(define (multiplier p) (car p))
+(define (odd? x) (= (remainder x 2) 1))
 
-(define (multiplicand p) (accumulate make-product 1 (cddr p)))
+(define (operators l)
+  (define (op-it idx l result)
+    (cond ((null? l) result)
+          ((odd? idx) (op-it (+ idx 1)
+                             (cdr l)
+                             (append result (list (car l)))))
+          (else (op-it (+ idx 1)
+                       (cdr l)
+                       result))))
+  (op-it 0 l '()))
+
+(define (sum? x) (and (pair? x) (contains-sym? (operators x) '+)))
+
+(define (addend s) (car (split-sym s '+)))
+
+(define (augend s) (cadr (split-sym s '+)))
+
+(define (product? x) (and (pair? x)
+                          (contains-sym? (operators x) '*)))
+
+(define (multiplier p) (car (split-sym p '*)))
+
+(define (multiplicand p) (cadr (split-sym p '*)))
 
 (define (=number? exp num) (and (number? exp) (= exp num)))
 
@@ -72,8 +110,7 @@
 
 (define (exponent e) (caddr e))
 
-
-(deriv '(x + 2) 'x)
+(deriv '(2 + x) 'x)
 
 (deriv '(x * y) 'x)
 
@@ -81,5 +118,17 @@
 
 (deriv '(x + 3 * (y + 2)) 'x)
 
-;; everything is a sum if it contains '+', only if no '+' may '*' be considered.
-;; use memq on p195 to break up lists according to presence of symbols.
+
+;; (sum? '(2 + x))
+
+;; (addend '(2 + x))
+
+;; (augend '(2 + x))
+
+
+;; (sum? '(2 + x + y))
+
+;; (addend '(2 + x + y))
+
+;; (augend '(2 + x + y))
+
