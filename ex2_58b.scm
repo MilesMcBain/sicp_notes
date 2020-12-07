@@ -59,7 +59,7 @@
           (else (split-it(append lhs (list (car rhs))) (cdr rhs) sym))
           ))
 
-  ;; This function is needed because a single element list is containing a
+  ;; This function is needed because a single element list containing a
   ;; variable or number isn't a data type that is understood by the rest of the
   ;; program. It unwraps length 1 lists to give the atomic element.
   (define (simplify-splits l)
