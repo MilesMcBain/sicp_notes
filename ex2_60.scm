@@ -32,3 +32,4 @@
 ;; operations the duplicate representation may be preferable.
 ;; perhaps if you have prior information that the overlap of these large sets is likely to be minimal?
 ;; Sets of real numbers? E.g. lon/lats?
+
