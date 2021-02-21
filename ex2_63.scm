@@ -21,10 +21,10 @@
     (if (null? tree)
         result-list
         (copy-to-list (left-branch tree)
-                     (cons (entry tree)
-                           (copy-to-list
-                            (right-branch tree)
-                            result-list)))))
+                      (cons (entry tree)
+                            (copy-to-list
+                             (right-branch tree)
+                             result-list)))))
   (copy-to-list tree '()))
 
 ;test trees
@@ -54,7 +54,6 @@
 
 (tree->list-1 tree1)
 (tree->list-2 tree1)
-
 (tree->list-1 tree2)
 (tree->list-2 tree2)
 (tree->list-1 tree3)
