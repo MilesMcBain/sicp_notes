@@ -51,10 +51,27 @@
                          (make-tree 9
                                     (make-tree 7 '() '())
                                     (make-tree 11 '() '()))))
+(define (system-time fn)
+  (let*
+      ((start-time (runtime))
+       (result (fn))
+       (elapsed-time (- (runtime) start-time)))
+       (write "*** result: " )
+       (write result)
+       (write " | ")
+       (write elapsed-time)
+       (newline)))
 
-(tree->list-1 tree1)
-(tree->list-2 tree1)
-(tree->list-1 tree2)
-(tree->list-2 tree2)
-(tree->list-1 tree3)
-(tree->list-2 tree3)
+
+(system-time (lambda () (tree->list-1 tree1)))
+(system-time (lambda () (tree->list-2 tree1)))
+
+(system-time (lambda () (tree->list-1 tree1)))
+(system-time (lambda () (tree->list-2 tree1)))
+
+(system-time (lambda () (tree->list-1 tree2)))
+(system-time (lambda () (tree->list-2 tree2)))
+
+
+(system-time (lambda () (tree->list-1 tree3)))
+(system-time (lambda () (tree->list-2 tree3)))
