@@ -32,7 +32,8 @@
                (choose-branch (car bits) current-branch)))
           (if (leaf? next-branch)
               (cons (symbol-leaf next-branch)
-                    (decode-1 (cdr bits) next-branch))))))
+                    (decode-1 (cdr bits) tree))
+              (decode-1 (cdr bits) next-branch)))))
   (decode-1 bits tree))
 (define (choose-branch bit branch)
   (cond ((= bit 0) (left-branch branch))
@@ -64,6 +65,12 @@
      (make-leaf 'C 1)))))
 
 sample-tree
+
+(choose-branch 0 sample-tree)
+(choose-branch 1 sample-tree)
+(leaf? (choose-branch 0 sample-tree))
+(symbol-leaf (choose-branch 0 sample-tree))
+(leaf? (choose-branch 1 sample-tree))
 
 (define sample-message '(0 1 1 0 0 1 0 1 0 1 1 1 0))
 
