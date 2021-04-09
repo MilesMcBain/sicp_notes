@@ -96,21 +96,23 @@
                    (cddr node-list)))))
 
 
-(define sample-tree
-  (make-code-tree
-   (make-leaf 'A 4)
-   (make-code-tree
-    (make-leaf 'B 2)
-    (make-code-tree
-     (make-leaf 'D 1)
-     (make-leaf 'C 1)))))
 
 
-(define sample-message '(0 1 1 0 0 1 0 1 0 1 1 1 0))
 
-(define generated-tree (generate-huffman-tree '((A 4) (B 2) (C 1) (D 1))) )
+(define rock-tree
+  (generate-huffman-tree '((A 2) (GET 2) (SHA 3) (WAH 1)
+                                 (BOOM 1) (JOB 2) (NA 16) (YIP 9))))
 
-sample-tree
-generated-tree
 
-(decode sample-message generated-tree)
+(define rock-lyrics '(GET A JOB
+                          SHA NA NA NA NA NA NA NA NA
+                          GET A JOB
+                          SHA NA NA NA NA NA NA NA NA
+                          WAH YIP YIP YIP YIP YIP YIP YIP YIP YIP
+                          SHA BOOM))
+
+(display (encode rock-lyrics rock-tree))
+(display "\n")
+
+(/ (length (encode rock-lyrics rock-tree)) 8)
+;; 84 bits, ~ 11 bytes to transmit. Tidy!
