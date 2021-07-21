@@ -98,12 +98,23 @@
 ;; To derive you peel off the first tag and evaluate the list
 ;;
 ;; the implementation for + looks a little like the old implementation of make-sum
+(define (strip-eval expression)
+  (eval (cdr expression)))
 
 (define (+-deriv a1 a2)
   (cond  ((and (number? a1) (number? a2)) 0)
-         ((number? a1) a2)
-         ((number? a2) a1)
-         (else (make-sum a1 a2))))
+         ((number? a1) (strip-eval a2))
+         ((number? a2) (strip-eval a1))
+         (else (make-sum (strip-eval a1) (strip-eval a2)))))
 
-;; not correct - needs an 'eval' on each returned thing to derive it.
+;; I guess before eval you should check the tag you're stripping but whatevs.
+
+;; Here's an implementation for product
+(define (*-deriv a1 a2)
+  (cond ((or (=number? m1 0) (=number? m2 0)) 0)
+        ((=number? m1 1) (strip-eval m2))
+        ((=number? m2 1) (strip-eval m1))
+        ((and (number? m1) (number? m2)) (* m1 m2))
+        (else (make-sum (make-product m1 (strip-eval m2))
+                        (make-product (strip-eval m1) m2)))))
 
