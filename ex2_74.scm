@@ -71,7 +71,18 @@ hr-personnel
 (define method-registry '())
 
 (define (put op type item)
-  (set! method-registry (cons (list op type item) method-registry )))
+  (define (itr-registry op type registry-searched registry-to-search)
+    (cond ((null? registry-to-search)
+           (set! method-registry (cons (list op type item) registry-searched)))
+          ((and (eq? (caar registry-to-search) op)
+                (eq? (cadar registry-to-search) type))
+           (set! method-registry (append registry-searched
+                                         (cons (list op type item)
+                                               (cdr registry-to-search)))))
+          (else (itr-registry op type
+                              (cons (car registry-to-search) registry-searched)
+                              (cdr registry-to-search)))))
+  (itr-registry op type '() method-registry))
 
 (define (get op type)
   (define (get-registry op type registry)
@@ -82,7 +93,7 @@ hr-personnel
   (get-registry op type method-registry))
 
 ;; a get-record
-;; first thing is we need to make the records typed to we can dispatch a generic procedure.
+;; we need to make the records typed to we can dispatch a generic procedure.
 
 (define it-personnel-typed
   (cons 'it it-personnel))
@@ -129,3 +140,32 @@ hr-personnel
 (get-record hr-personnel-typed "Bob")
 
 (get-record hr-personnel-typed "Julia")
+
+;; b get-salary
+;; pretty easy since we have underlying generics that return data in the same form
+
+;; the salary keys differ between databases this takes the salary key name as an arg
+(define (get-salary-it personnel-file name)
+  (let ((record (get-record-it personnel-file name)))
+    (if (null? record)
+        '()
+        (get-elem-by-key record 'salary))))
+
+(define (get-salary-hr personnel-file name)
+  (let ((record (get-record-hr personnel-file name)))
+    (if (null? record)
+        '()
+        (get-elem-by-key record 'pay))))
+
+(define (get-salary personnel-file name)
+  ((get 'get-salary (car personnel-file)) (cdr personnel-file) name))
+
+(put 'get-salary 'it get-salary-it)
+
+(put 'get-salary 'hr get-salary-hr)
+
+(get-salary it-personnel-typed "Mike")
+
+(get-salary hr-personnel-typed "Bob")
+
+;; c find-employee-record
