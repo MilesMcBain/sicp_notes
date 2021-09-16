@@ -10,7 +10,6 @@
 (define (value kvp)
   (cdr kvp))
 
-;; get the nth element
 (define (get-elem-n l n)
   (cond ((= n 0) '())
         ((null? l) (error "get-elem-n: index out of bounds"))
@@ -23,13 +22,22 @@
         (cond ((eq? (key candidate-elem) k) (cdr candidate-elem))
               (else (get-elem-by-key (cdr l) k))))))
 
-(define (match-kvp k v l)
-  (define (match-kvp-ind k v l n)
+(define (match-kvp l k v)
+  (define (match-kvp-ind l k v n)
     (if (null? l) '()
         (let ((candidate-kvp (car l)))
           (cond ((and (eq? k (key candidate-kvp)) (eq? v (value candidate-kvp))) n)
-                (else (match-kvp-ind k v (cdr l) (+ n 1))))) ))
-  (match-kvp-ind k v l 1))
+                (else (match-kvp-ind (cdr l) k v (+ n 1))))) ))
+  (match-kvp-ind l k v 1))
+
+(define (match-item l v)
+  (define (match-item-ind l v n)
+    (if (null? l) '()
+        (cond ((eq? (car l) v) n)
+              (else (match-item-ind (cdr l) v (+ n 1))))))
+  (match-item-ind l v 1))
+
+;; datasets
 
 (define (make-person-hr name position pay location)
   (list (cons 'keys (list 'name 'position 'pay 'location))
@@ -87,11 +95,37 @@ hr-personnel
   ((get 'get-record (car file)) (cdr file) name))
 
 (define (get-record-it personnel-record name)
-  (let ((record-ind (match-kvp 'name name (get-elem-by-key personnel-record 'keys))))
+  (let ((record-ind (match-kvp (get-elem-by-key personnel-record 'keys) 'name name)))
     (cons (get-elem-n (get-elem-by-key personnel-record 'keys) record-ind)
           (get-elem-n (get-elem-by-key personnel-record 'values) record-ind))))
 
 (put 'get-record 'it get-record-it)
 
+(define (get-record-hr personnel-record name)
+  (define (scan-records db k v)
+    (if (null? db)
+        '()
+        (let ((row (car db)))
+          (let ((key-ind (match-item (get-elem-by-key row 'keys) k)))
+            (if (eq? (get-elem-n (get-elem-by-key row 'values) key-ind)  v)
+                row
+                (scan-records (cdr db) k v))))))
+  (define (zip keys values)
+    (map cons keys values))
+  (let ((match (scan-records personnel-record 'name name)))
+    (if (not (null? match))
+        (zip
+         (get-elem-by-key match 'keys)
+         (get-elem-by-key match 'values))
+        '())))
+
+
+(put 'get-record 'hr get-record-hr)
+
 (get-record it-personnel-typed "Mike")
+
 (get-record it-personnel-typed "Jessie")
+
+(get-record hr-personnel-typed "Bob")
+
+(get-record hr-personnel-typed "Julia")
