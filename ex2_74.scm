@@ -107,8 +107,10 @@ hr-personnel
 
 (define (get-record-it personnel-record name)
   (let ((record-ind (match-kvp (get-elem-by-key personnel-record 'keys) 'name name)))
-    (cons (get-elem-n (get-elem-by-key personnel-record 'keys) record-ind)
-          (get-elem-n (get-elem-by-key personnel-record 'values) record-ind))))
+    (if (null? record-ind)
+        '()
+        (cons (get-elem-n (get-elem-by-key personnel-record 'keys) record-ind)
+          (get-elem-n (get-elem-by-key personnel-record 'values) record-ind)))))
 
 (put 'get-record 'it get-record-it)
 
@@ -137,9 +139,13 @@ hr-personnel
 
 (get-record it-personnel-typed "Jessie")
 
+(get-record it-personnel-typed "Nobody")
+
 (get-record hr-personnel-typed "Bob")
 
 (get-record hr-personnel-typed "Julia")
+
+(get-record hr-personnel-typed "Nobody")
 
 ;; b get-salary
 ;; pretty easy since we have underlying generics that return data in the same form
@@ -169,3 +175,19 @@ hr-personnel
 (get-salary hr-personnel-typed "Bob")
 
 ;; c find-employee-record
+
+(define hr-files (list it-personnel-typed hr-personnel-typed))
+
+(define (find-employee name files)
+  (if (null? files)
+      '()
+      (let ((match (get-record (car files) name)))
+        (if (not (null? match))
+            match
+            (find-employee name (cdr files))))))
+
+(find-employee "Julia" hr-files)
+
+;;d
+
+;; When Insatiable takes over a new company they need to implement the get-record interface for the new company's data files. They can be added to the list of hr files.
