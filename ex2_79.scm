@@ -35,7 +35,7 @@
     (cond ((null? registry-to-search)
            (set! method-registry (cons (list op type item) registry-searched)))
           ((and (eq? (caar registry-to-search) op)
-                (eq? (cadar registry-to-search) type))
+                (type-eq? (cadar registry-to-search) type))
            (set! method-registry (append registry-searched
                                          (cons (list op type item)
                                                (cdr registry-to-search)))))
